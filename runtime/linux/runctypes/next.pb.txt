@@ -164,6 +164,13 @@ file {
       type: TYPE_STRING
       json_name: "cgroupsMode"
     }
+    field {
+      name: "tcp_skip_in_flight"
+      number: 8
+      label: LABEL_OPTIONAL
+      type: TYPE_BOOL
+      json_name: "tcpSkipInFlight"
+    }
   }
   message_type {
     name: "ProcessDetails"
