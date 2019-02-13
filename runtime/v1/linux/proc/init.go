@@ -418,6 +418,7 @@ func (p *Init) exec(ctx context.Context, path string, r *ExecConfig) (proc.Proce
 
 // Checkpoint the init process
 func (p *Init) Checkpoint(ctx context.Context, r *CheckpointConfig) error {
+	fmt.Printf("Checkpoint hurr\n")
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -425,6 +426,7 @@ func (p *Init) Checkpoint(ctx context.Context, r *CheckpointConfig) error {
 }
 
 func (p *Init) checkpoint(ctx context.Context, r *CheckpointConfig) error {
+	fmt.Printf("Checkpoint called here!!!!\n")
 	var actions []runc.CheckpointAction
 	if !r.Exit {
 		actions = append(actions, runc.LeaveRunning)
@@ -439,6 +441,8 @@ func (p *Init) checkpoint(ctx context.Context, r *CheckpointConfig) error {
 		AllowTerminal:            r.AllowTerminal,
 		FileLocks:                r.FileLocks,
 		EmptyNamespaces:          r.EmptyNamespaces,
+		// TODO
+		TCPSkipInFlight: true,
 	}, actions...); err != nil {
 		dumpLog := filepath.Join(p.Bundle, "criu-dump.log")
 		if cerr := copyFile(dumpLog, filepath.Join(work, "dump.log")); cerr != nil {

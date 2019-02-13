@@ -486,7 +486,7 @@ func (o *CheckpointOpts) args() (out []string) {
 		out = append(out, "--empty-ns", ns)
 	}
 	if o.TCPSkipInFlight {
-		out = append(out, "--skip-in-flight")
+		out = append(out, "--tcp-skip-in-flight")
 	}
 	return out
 }
