@@ -171,6 +171,13 @@ file {
       type: TYPE_BOOL
       json_name: "tcpSkipInFlight"
     }
+    field {
+      name: "page_server"
+      number: 9
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "pageServer"
+    }
   }
   message_type {
     name: "ProcessDetails"

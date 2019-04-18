@@ -23,7 +23,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -432,7 +431,8 @@ func (p *Init) checkpoint(ctx context.Context, r *CheckpointConfig) error {
 		actions = append(actions, runc.LeaveRunning)
 	}
 	work := filepath.Join(p.WorkDir, "criu-work")
-	defer os.RemoveAll(work)
+	// TODO: MATT ADDED THIS BACK IN AFTER DEBUGGING
+	//defer os.RemoveAll(work)
 	if err := p.runtime.Checkpoint(ctx, p.id, &runc.CheckpointOpts{
 		WorkDir:                  work,
 		ImagePath:                r.Path,
@@ -443,8 +443,10 @@ func (p *Init) checkpoint(ctx context.Context, r *CheckpointConfig) error {
 		EmptyNamespaces:          r.EmptyNamespaces,
 		// TODO
 		TCPSkipInFlight: true,
+		CriuPageServer:  r.PageServer,
 	}, actions...); err != nil {
 		dumpLog := filepath.Join(p.Bundle, "criu-dump.log")
+		fmt.Println(dumpLog)
 		if cerr := copyFile(dumpLog, filepath.Join(work, "dump.log")); cerr != nil {
 			log.G(ctx).Error(err)
 		}
