@@ -41,6 +41,7 @@ import (
 	"github.com/containerd/containerd/mount"
 	"github.com/containerd/containerd/plugin"
 	"github.com/containerd/containerd/runtime"
+	"github.com/containerd/containerd/runtime/linux/runctypes"
 	v2 "github.com/containerd/containerd/runtime/v2"
 	"github.com/containerd/containerd/services"
 	"github.com/containerd/typeurl"
@@ -127,11 +128,25 @@ func (l *local) Create(ctx context.Context, r *api.CreateTaskRequest, _ ...grpc.
 		checkpointPath string
 		err            error
 	)
+
 	if r.Checkpoint != nil {
-		checkpointPath, err = ioutil.TempDir(os.Getenv("XDG_RUNTIME_DIR"), "ctrd-checkpoint")
-		if err != nil {
-			return nil, err
+		var createOpts runctypes.CreateOptions
+		if r.Options != nil {
+			v, err := typeurl.UnmarshalAny(r.Options)
+			if err != nil {
+				return nil, err
+			}
+			createOpts = *v.(*runctypes.CreateOptions)
 		}
+		if len(createOpts.ShimCgroup) > 0 {
+			checkpointPath = createOpts.ShimCgroup
+		} else {
+			checkpointPath, err = ioutil.TempDir(os.Getenv("XDG_RUNTIME_DIR"), "ctrd-checkpoint")
+			if err != nil {
+				return nil, err
+			}
+		}
+
 		if r.Checkpoint.MediaType != images.MediaTypeContainerd1Checkpoint {
 			return nil, fmt.Errorf("unsupported checkpoint type %q", r.Checkpoint.MediaType)
 		}
