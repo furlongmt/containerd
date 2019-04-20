@@ -417,7 +417,10 @@ func (t *task) Checkpoint(ctx context.Context, opts ...CheckpointTaskOpts) (Imag
 		}
 		request.Options = any
 	}
+	// MATTODO:
 	// make sure we pause it and resume after all other filesystem operations are completed
+	// MATT: remove pause because we want to fork the processes and still have them
+	// run for CoW
 	if err := t.Pause(ctx); err != nil {
 		return nil, err
 	}
