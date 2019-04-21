@@ -138,9 +138,8 @@ func (l *local) Create(ctx context.Context, r *api.CreateTaskRequest, _ ...grpc.
 			}
 			createOpts = *v.(*runctypes.CreateOptions)
 		}
-		if len(createOpts.ShimCgroup) > 0 {
-			checkpointPath = createOpts.ShimCgroup
-			createOpts.ShimCgroup = ""
+		if len(createOpts.CheckpointPath) > 0 {
+			checkpointPath = createOpts.CheckpointPath
 		} else {
 			checkpointPath, err = ioutil.TempDir(os.Getenv("XDG_RUNTIME_DIR"), "ctrd-checkpoint")
 			if err != nil {

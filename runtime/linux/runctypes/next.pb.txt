@@ -112,6 +112,13 @@ file {
       type: TYPE_UINT32
       json_name: "ioGid"
     }
+    field {
+      name: "checkpoint_path"
+      number: 12
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "checkpointPath"
+    }
   }
   message_type {
     name: "CheckpointOptions"
